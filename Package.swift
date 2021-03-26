@@ -7,14 +7,14 @@ let package = Package(
         .executable(name: "FrenchRepublicanCalendarWeb", targets: ["FrenchRepublicanCalendarWeb"])
     ],
     dependencies: [
-        .package(name: "Tokamak", url: "https://github.com/TokamakUI/Tokamak", from: "0.6.1"),
+        .package(name: "Tokamak", url: "https://github.com/TokamakUI/Tokamak", .branch("main")),
         .package(name: "FrenchRepublicanCalendarCore", url: "https://github.com/Snowy1803/FrenchRepublicanCalendarCore", .branch("main"))
     ],
     targets: [
         .target(
             name: "FrenchRepublicanCalendarWeb",
             dependencies: [
-                .product(name: "TokamakShim", package: "Tokamak"),
+                .product(name: "TokamakDOM", package: "Tokamak"),
                 "FrenchRepublicanCalendarCore"
             ]),
         .testTarget(
