@@ -7,7 +7,7 @@ let package = Package(
         .executable(name: "FrenchRepublicanCalendarWeb", targets: ["FrenchRepublicanCalendarWeb"])
     ],
     dependencies: [
-        .package(name: "Tokamak", url: "https://github.com/Snowy1803/Tokamak", .branch("main")),
+        .package(name: "Tokamak", url: "https://github.com/Snowy1803/Tokamak", .branch("picker-initialselection")),
         .package(name: "FrenchRepublicanCalendarCore", url: "https://github.com/Snowy1803/FrenchRepublicanCalendarCore", .branch("main"))
     ],
     targets: [
