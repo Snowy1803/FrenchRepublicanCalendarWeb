@@ -57,10 +57,10 @@
       },
       {
         "package": "Tokamak",
-        "repositoryURL": "https://github.com/TokamakUI/Tokamak",
+        "repositoryURL": "https://github.com/Snowy1803/Tokamak",
         "state": {
           "branch": "main",
-          "revision": "bde7de9be0f1a529aedec2dc7fb0d44c23943581",
+          "revision": "ccea8adde01caf3c363511999f8e47b4b4900135",
           "version": null
         }
       }
