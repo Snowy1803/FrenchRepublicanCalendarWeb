@@ -20,7 +20,16 @@ struct ContentView: View {
                 HStack {
                     Text("Aujourd'hui :")
                     Spacer()
-                    Text(FrenchRepublicanDate(date: Date()).toVeryLongString())
+                    DynamicHTML("a", [
+                        "href": "javascript:void%200",
+                    ], listeners: [
+                        "click": { _ in
+                            date = Date()
+                        }
+                    ]) {
+                        Text(FrenchRepublicanDate(date: Date()).toVeryLongString())
+                            .foregroundColor(.accentColor)
+                    }
                 }
                 HStack {
                     Text("Grégorien :")
@@ -37,12 +46,40 @@ struct ContentView: View {
                         date = $0.toRep.date
                     })
                 }
-                HStack {
-                    Spacer()
-                    Text(FrenchRepublicanDate(date: date).toVeryLongString())
-                }
+                DateDetails(date: FrenchRepublicanDate(date: date))
                 Spacer()
             }
+        }
+    }
+}
+
+struct DateDetails: View {
+    var date: FrenchRepublicanDate
+    
+    var body: some View {
+        Text(date.toVeryLongString()).font(.title2)
+        // until we get alignment guides...
+        HStack {
+            VStack(alignment: .trailing) {
+                Text("Jour : ")
+                Text("Saison :")
+                Text("Décade :")
+                Text("Jour de l'année :")
+                Text("Date abrégée :")
+            }.padding([.leading, .trailing], 15)
+            
+            VStack(alignment: .leading) {
+                Link(destination: date.descriptionURL!) {
+                    Text(date.dayName)
+                        .underline()
+                        .foregroundColor(.accentColor)
+                }
+                Text(date.quarter)
+                Text("\(date.components.weekOfYear!)/37")
+                Text("\(date.dayInYear)/\(date.isYearSextil ? 366 : 365)")
+                Text(date.toShortenedString())
+            }
+            Spacer()
         }
     }
 }
