@@ -18,11 +18,6 @@ struct ContentView: View {
             VStack(alignment: .leading) {
                 Text("Calendrier républicain").font(.largeTitle)
                 HStack {
-                    Text("Hier :")
-                    Spacer()
-                    Text(FrenchRepublicanDate(date: Date().addingTimeInterval(-3600*24)).toVeryLongString())
-                }
-                HStack {
                     Text("Aujourd'hui :")
                     Spacer()
                     Text(FrenchRepublicanDate(date: Date()).toVeryLongString())

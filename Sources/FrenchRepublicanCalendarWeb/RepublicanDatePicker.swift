@@ -30,7 +30,7 @@ struct RepublicanDatePicker: View {
             Text(" ")
             NavigatingPicker(
                 selection: $date[dynamicMember: \.year],
-                range: 1..<2708,
+                range: 1..<600,
                 transformer: {
                     FrenchRepublicanDate(dayInYear: 1, year: $0).formattedYear
                 }
