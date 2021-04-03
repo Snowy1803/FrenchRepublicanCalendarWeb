@@ -11,6 +11,7 @@ struct TokamakApp: App {
 }
 
 struct ContentView: View {
+    @AppStorage("frdo-roman") var romanYear = false
     @State private var date: Date = Date()
     
     var body: some View {
@@ -47,6 +48,9 @@ struct ContentView: View {
                     Spacer()
                 }
                 DateDetails(date: frd)
+                Toggle(isOn: $romanYear) {
+                    Text("Chiffres romains pour les années")
+                }
                 Spacer()
             }
         }
