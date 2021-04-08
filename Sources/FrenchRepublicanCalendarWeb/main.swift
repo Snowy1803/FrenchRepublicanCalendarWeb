@@ -1,6 +1,7 @@
 import Foundation
 import TokamakDOM
 import FrenchRepublicanCalendarCore
+import JavaScriptKit
 
 struct TokamakApp: App {
     var body: some Scene {
@@ -14,7 +15,39 @@ struct ContentView: View {
     @AppStorage("frdo-roman") var romanYear = false
     @State private var date: Date = Date()
     
+    init() {
+        if let str = JSObject.global.window.location.hash.jsString {
+            let current = JSDate()
+            let components = str.description.dropFirst().components(separatedBy: "-")
+            if components.count == 3 {
+                current.fullYear = Int(components[0]) ?? 0
+                current.month = (Int(components[1]) ?? 0) - 1
+                current.date = Int(components[2]) ?? 0
+            }
+            let ms = current.valueOf()
+            if ms.isFinite {
+                _date = State(wrappedValue: Date(timeIntervalSince1970: ms / 1000))
+            }
+        }
+    }
+    
+    func updateFragment() {
+        let date = JSDate(millisecondsSinceEpoch: self.date.timeIntervalSince1970 * 1000)
+        let y = date.fullYear
+        let year: String
+        if y < 0 {
+            year = "-" + "00000\(-y)".suffix(6)
+        } else if y > 9999 {
+            year = "+" + "00000\(y)".suffix(6)
+        } else {
+            year = String("000\(y)".suffix(4))
+        }
+        print("\(year)-\("0\(date.month + 1)".suffix(2))-\("0\(date.date)".suffix(2))")
+        JSObject.global.window.location.hash = JSValue(stringLiteral: "\(year)-\("0\(date.month + 1)".suffix(2))-\("0\(date.date)".suffix(2))")
+    }
+    
     var body: some View {
+        let _ = updateFragment()
         HTML("div", ["style": "width: 100%; height: 100%; padding: 10px;"]) {
             VStack(alignment: .leading) {
                 Text("Calendrier républicain").font(.largeTitle)
