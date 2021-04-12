@@ -13,6 +13,7 @@ struct TokamakApp: App {
 
 struct ContentView: View {
     @AppStorage("frdo-roman") var romanYear = false
+    @AppStorage("frdo-variant") var variant = 0
     @State private var date: Date = Date()
     
     init() {
@@ -83,6 +84,14 @@ struct ContentView: View {
                 DateDetails(date: frd)
                 Toggle(isOn: $romanYear) {
                     Text("Chiffres romains pour les années")
+                }
+                Picker(selection: $variant, label: Text("Calendrier")) {
+                    AnyView(
+                        ForEach(FrenchRepublicanDateOptions.Variant.allCases.map { $0.rawValue }, id: \.self) { variantRaw in
+                            let variant = FrenchRepublicanDateOptions.Variant.init(rawValue: variantRaw)!
+                            Text(variant.description)
+                        }
+                    )
                 }
                 Spacer()
             }
