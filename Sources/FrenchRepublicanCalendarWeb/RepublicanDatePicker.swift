@@ -16,12 +16,12 @@ struct RepublicanDatePicker: View {
     var body: some View {
         HStack(spacing: 0) {
             NavigatingPicker(
-                selection: $date[dynamicMember: \.day],
+                selection: $date.day,
                 range: 1..<(date.month < 13 ? 31 : date.year % 4 == 3 ? 7 : 6)
             )
             Text(" ")
             NavigatingPicker(
-                selection: $date[dynamicMember: \.month],
+                selection: $date.month,
                 range: 1..<14,
                 transformer: {
                     FrenchRepublicanDate.allMonthNames[$0 - 1]
@@ -29,7 +29,7 @@ struct RepublicanDatePicker: View {
             )
             Text(" ")
             NavigatingPicker(
-                selection: $date[dynamicMember: \.year],
+                selection: $date.year,
                 range: 1..<600,
                 transformer: {
                     FrenchRepublicanDate(dayInYear: 1, year: $0).formattedYear
