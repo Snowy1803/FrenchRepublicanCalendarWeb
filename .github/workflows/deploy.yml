@@ -15,10 +15,9 @@ jobs:
         with:
           shell-action: carton bundle
 
-      - run: echo 'frc.emil.codes' > ./Bundle/CNAME
-
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./Bundle
+          cname: frc.emil.codes
