@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/Snowy1803/FrenchRepublicanCalendarCore",
         "state": {
           "branch": "main",
-          "revision": "c9ba35ee2aa1ca291615cceaec5b828f78f5f17a",
+          "revision": "43839cbdd1e4e3ea958ba15c9ffd374d02749109",
           "version": null
         }
       },
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/swiftwasm/JavaScriptKit.git",
         "state": {
           "branch": null,
-          "revision": "ebd9ca04215397f0e3cb72d6e96406a980a424e5",
-          "version": "0.10.0"
+          "revision": "b19e7c8b10a2750ed47753e31ed13613171f3294",
+          "version": "0.10.1"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/OpenCombine/OpenCombine.git",
         "state": {
           "branch": null,
-          "revision": "28993ae57de5a4ea7e164787636cafad442d568c",
-          "version": "0.12.0"
+          "revision": "9cf67e363738dbab61b47fb5eaed78d3db31e5ee",
+          "version": "0.13.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/swiftwasm/OpenCombineJS.git",
         "state": {
           "branch": null,
-          "revision": "eaf324ce78710f53b52fb82e9a8de4693633e33a",
-          "version": "0.1.1"
+          "revision": "f1f1799ddbb9876a0ef8c5700a3b78d352d0b969",
+          "version": "0.1.2"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "831ed5e860a70e745bc1337830af4786b2576881",
-          "version": "0.4.1"
+          "revision": "9f39744e025c7d377987f30b03770805dcb0bcd1",
+          "version": "1.1.4"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/google/swift-benchmark",
         "state": {
           "branch": null,
-          "revision": "8e0ef8bb7482ab97dcd2cd1d6855bd38921c345d",
-          "version": "0.1.0"
+          "revision": "8163295f6fe82356b0bcf8e1ab991645de17d096",
+          "version": "0.1.2"
         }
       },
       {
@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/Snowy1803/Tokamak",
         "state": {
           "branch": "picker-initial-selection",
-          "revision": "4f4f191beafe83b17c3ad2eb7d4e32ff694b3549",
+          "revision": "6ac831297ca391b49caaddec88bd4cde79d80069",
           "version": null
         }
       }
