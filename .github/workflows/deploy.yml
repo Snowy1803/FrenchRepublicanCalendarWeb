@@ -20,6 +20,7 @@ jobs:
           mkdir -p Bundle
           cp -r .build/plugins/PackageToJS/outputs/Package/* Bundle/
           cp index.html Bundle/
+          cp style.css Bundle/
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
