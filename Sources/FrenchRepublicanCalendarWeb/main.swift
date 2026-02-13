@@ -52,92 +52,67 @@ struct ContentView {
     }
     
     var body: some View {
-        div(.style("width: 100%; height: 100%; padding: 10px; font-family: -apple-system, BlinkMacSystemFont, sans-serif")) {
-            div(.style("display: flex; flex-direction: column; align-items: flex-start; gap: 10px")) {
-                h1(.style("font-size: 2em")) { "Calendrier républicain" }
-                
-                let frd = FrenchRepublicanDate(date: date)
-                
-                div(.style("display: flex; flex-direction: row")) {
-                    // Left column labels
-                    div(.style("display: flex; flex-direction: column; align-items: flex-end; padding: 0 15px; width: 150px")) {
-                        div { "Aujourd'hui :" }
-                        div { "Grégorien :" }
-                        div { "Républicain :" }
+        div(.class("app-container")) {
+            // Header
+            h1 { "Calendrier républicain" }
+            
+            let frd = FrenchRepublicanDate(date: date)
+            
+            // Card 1: Today
+            div(.class("glass-card"), .class("card-center")) {
+                h2 { "Aujourd'hui" }
+                div(.class("today-display")) {
+                    a(.href("javascript:void(0)"), .class("today-link")) {
+                        FRCFormat.republicanDate.weekday(.long).day(.preferred).year(.long).format(FrenchRepublicanDate(date: Date()))
                     }
-                    // Right column inputs
-                    RightColumnInputs(date: $date, frd: frd, inputDateFormatter: inputDateFormatter)
+                    .onClick {
+                        setDate(Date())
+                    }
                 }
-                
-                DateDetails(date: frd)
-                
-                // Settings
+            }
+            
+            // Card 2: Converter
+            div(.class("glass-card")) {
+                h2 { "Convertisseur" }
+                div(.class("converter-grid")) {
+                    // Row 1: Gregorian
+                    label(.class("converter-label")) { "Grégorien :" }
+                    input(.type(.date), .value(inputDateFormatter.string(from: date)))
+                        .onInput { event in
+                            if let value = event.targetValue {
+                                if let newDate = inputDateFormatter.date(from: value) {
+                                    setDate(newDate)
+                                }
+                            }
+                        }
+                    
+                    // Row 2: Republican
+                    label(.class("converter-label")) { "Républicain :" }
+                    RepublicanDatePicker(date: Binding(get: {
+                        MyRepublicanDateComponents(day: frd.components.day!, month: frd.components.month!, year: frd.components.year!)
+                    }, set: { newComps in
+                        setDate(newComps.toRep.date)
+                    }))
+                }
+            }
+            
+            // Card 3: Details
+            div(.class("glass-card")) {
+                h2 { "Détails" }
+                DateDetails(date: frd, originalDate: date)
+            }
+            
+            // Card 4: Settings
+            div(.class("glass-card")) {
+                h2 { "Réglages" }
                 SettingsView(romanYear: $romanYear, variant: $variant, date: date, setDate: setDate)
             }
         }
     }
 }
 
-@View
-struct RightColumnInputs {
-    @Binding var date: Date
-    var frd: FrenchRepublicanDate
-    var inputDateFormatter: DateFormatter
-    
-    // Wrapper to set date from non-binding context if needed, but binding is better
-    func setDate(_ newDate: Date) {
-        date = newDate
-        // Trigger side effects via Binding if possible, or just rely on parent's body update?
-        // In Elementary, State updates re-render.
-        // But we needed to update the Hash.
-        // We can attach .onChange equivalent or just do it in the setter.
-        // For now, let's duplicate the hash update logic or move it to a shared helper?
-        // Ideally we pass a closure `setDate`.
-        updateHash(for: newDate)
-    }
-    
-    func updateHash(for date: Date) {
-         let jsDate = JSDate(millisecondsSinceEpoch: date.timeIntervalSince1970 * 1000)
-         let y = jsDate.fullYear
-         let year: String
-         if y < 0 {
-              year = "-" + "00000\(-y)".suffix(6)
-         } else if y > 9999 {
-              year = "+" + "00000\(y)".suffix(6)
-         } else {
-              year = String("000\(y)".suffix(4))
-         }
-         let hash = "\(year)-\("0\(jsDate.month + 1)".suffix(2))-\("0\(jsDate.date)".suffix(2))"
-         JSObject.global.window.location.hash = JSValue(stringLiteral: hash)
-    }
-    
-    var body: some View {
-        div(.style("display: flex; flex-direction: column; align-items: flex-start")) {
-            a(.href("javascript:void(0)"), .style("color: var(--accent-color, #007aff)")) {
-                FRCFormat.republicanDate.weekday(.long).day(.preferred).year(.long).format(FrenchRepublicanDate(date: Date()))
-            }
-            .onClick {
-                setDate(Date())
-            }
-             // DatePicker replacement
-            input(.type(.date), .value(inputDateFormatter.string(from: date)))
-                .onInput { event in
-                    if let value = event.targetValue {
-                        if let newDate = inputDateFormatter.date(from: value) {
-                            setDate(newDate)
-                        }
-                    }
-                }
-            
-            // Republican Date Picker
-            RepublicanDatePicker(date: Binding(get: {
-                MyRepublicanDateComponents(day: frd.components.day!, month: frd.components.month!, year: frd.components.year!)
-            }, set: { newComps in
-                setDate(newComps.toRep.date)
-            }))
-        }
-    }
-}
+// RightColumnInputs removed as it is now integrated into ContentView
+
 
 @View
 struct SettingsView {
@@ -147,31 +122,28 @@ struct SettingsView {
     var setDate: (Date) -> Void
     
     var body: some View {
-        // Toggle Roman Year
-        label {
-            if romanYear {
-                input(.type(.checkbox), .checked)
-                    .onInput { _ in
-                         // Checkbox logic needs to handle unchecking too, but onInput triggers on change.
-                         // Standard checkbox toggle logic:
-                         romanYear.toggle()
-                         updateOptions()
-                    }
-            } else {
-                 input(.type(.checkbox))
-                    .onInput { _ in
-                         romanYear.toggle()
-                         updateOptions()
-                    }
+        div(.class("settings-grid")) {
+             // Row 1: Roman Year
+            label(.class("settings-label")) { "Années :" }
+            div(.class("settings-value-row")) {
+                if romanYear {
+                    input(.type(.checkbox), .checked)
+                        .onInput { _ in
+                             romanYear.toggle()
+                             updateOptions()
+                        }
+                } else {
+                     input(.type(.checkbox))
+                        .onInput { _ in
+                             romanYear.toggle()
+                             updateOptions()
+                        }
+                }
+                span { "Chiffres romains" }
             }
             
-            " "
-            "Chiffres romains pour les années"
-        }
-        
-        // Variant Picker
-        div {
-            "Calendrier "
+            // Row 2: Variant Picker
+            label(.class("settings-label")) { "Calendrier :" }
             select {
                 for variantOption in FrenchRepublicanDateOptions.Variant.allCases {
                     if variant == variantOption.rawValue {
@@ -207,31 +179,54 @@ struct SettingsView {
 @View
 struct DateDetails {
     var date: FrenchRepublicanDate
+    var originalDate: Date
+    
+    var gregorianFormatter: DateFormatter {
+        let f = DateFormatter()
+        f.dateStyle = .full
+        f.timeStyle = .none
+        f.locale = Locale(identifier: "fr_FR")
+        return f
+    }
     
     var body: some View {
-        h2(.style("font-size: 1.5em")) { FRCFormat.republicanDate.weekday(.long).day(.preferred).year(.long).format(date) }
-        
-        div(.style("display: flex; flex-direction: row")) {
-             // Labels
-             div(.style("display: flex; flex-direction: column; align-items: flex-end; padding: 0 15px; width: 150px")) {
-                div { "Jour : " }
-                div { "Saison :" }
-                div { "Décade :" }
-                div { "Jour de l'année :" }
-                div { "Date abrégée :" }
+        div(.class("date-details-grid")) {
+             // Row 0: Full Date
+             div(.class("detail-label")) { "Date complète :" }
+             div(.class("detail-value")) {
+                 FRCFormat.republicanDate.weekday(.long).day(.preferred).year(.long).format(date)
              }
              
-             // Values
-             div(.style("display: flex; flex-direction: column; align-items: flex-start")) {
-                 a(.href(date.descriptionURL?.absoluteString ?? "#"), .style("text-decoration: underline; color: var(--accent-color, #007aff)")) {
-                    date.dayName
-                 }
-                 
-                 div { date.quarter }
-                 div { "\(date.components.weekOfYear!)/37" }
-                 div { "\(date.dayInYear)/\(date.isYearSextil ? 366 : 365)" }
-                 div { FRCFormat.republicanDate.day(.preferred).dayLength(.short).year(.short).format(date) }
+             // Row 0.5: Gregorian Date
+             div(.class("detail-label")) { "Date grégorienne :" }
+             div(.class("detail-value")) {
+                 gregorianFormatter.string(from: originalDate)
              }
+
+             // Row 1
+             div(.class("detail-label")) { "Jour :" }
+             div(.class("detail-value")) {
+                 date.dayName
+                 if let url = date.descriptionURL?.absoluteString {
+                     a(.href(url), .target(.blank), .class("definition-link")) { "(Définition)" }
+                 }
+             }
+             
+             // Row 2
+             div(.class("detail-label")) { "Saison :" }
+             div(.class("detail-value")) { date.quarter }
+             
+             // Row 3
+             div(.class("detail-label")) { "Décade :" }
+             div(.class("detail-value")) { "\(date.components.weekOfYear!)/37" }
+             
+             // Row 4
+             div(.class("detail-label")) { "Jour de l'année :" }
+             div(.class("detail-value")) { "\(date.dayInYear)/\(date.isYearSextil ? 366 : 365)" }
+             
+             // Row 5
+             div(.class("detail-label")) { "Date abrégée :" }
+             div(.class("detail-value")) { date.toShortenedString() }
         }
     }
 }

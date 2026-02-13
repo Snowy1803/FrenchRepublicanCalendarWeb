@@ -10,4 +10,7 @@ cp -r .build/plugins/PackageToJS/outputs/Package/* Bundle/
 # Copy the index.html to the Bundle directory
 cp index.html Bundle/
 
+# Copy the style.css to the Bundle directory
+cp style.css Bundle/
+
 echo "Build complete! Artifacts are in the Bundle directory."

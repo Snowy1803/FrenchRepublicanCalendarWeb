@@ -8,7 +8,7 @@ struct RepublicanDatePicker {
     @Binding var date: MyRepublicanDateComponents
     
     var body: some View {
-        div(.style("display: flex")) {
+        div(.class("flex-row"), .style("gap: 10px")) {
             NavigatingPicker(
                 selection: $date.day,
                 range: 1..<(date.month < 13 ? 31 : FrenchRepublicanDateOptions.current.variant.isYearSextil(date.year) ? 7 : 6)
