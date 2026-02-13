@@ -12,19 +12,27 @@
 
 import FrenchRepublicanCalendarCore
 import Foundation
-import TokamakDOM
+import FrenchRepublicanCalendarCore
+import Foundation
+import JavaScriptKit
 
-extension FrenchRepublicanDateOptions: SaveableFrenchRepublicanDateOptions {
+extension FrenchRepublicanDateOptions: @retroactive SaveableFrenchRepublicanDateOptions {
     public static var current: FrenchRepublicanDateOptions {
         get {
-            FrenchRepublicanDateOptions(
-                romanYear: LocalStorage.standard.read(key: "frdo-roman") ?? false,
-                variant: Variant(rawValue: LocalStorage.standard.read(key: "frdo-variant") ?? 0) ?? .original
+            let storage = JSObject.global.localStorage
+            let romanYear = storage.getItem("frdo-roman").string == "true"
+            let variantString = storage.getItem("frdo-variant").string ?? "2" // Default to Delambre (2)
+            let variantRaw = Int(variantString) ?? 2
+            
+            return FrenchRepublicanDateOptions(
+                romanYear: romanYear,
+                variant: Variant(rawValue: variantRaw) ?? .delambre
             )
         }
         set {
-            LocalStorage.standard.store(key: "frdo-roman", value: newValue.romanYear)
-            LocalStorage.standard.store(key: "frdo-variant", value: newValue.variant.rawValue)
+            let storage = JSObject.global.localStorage
+            _ = storage.setItem("frdo-roman", JSValue.boolean(newValue.romanYear))
+            _ = storage.setItem("frdo-variant", JSValue.string(String(newValue.variant.rawValue)))
         }
     }
 }

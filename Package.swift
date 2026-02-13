@@ -1,21 +1,26 @@
-// swift-tools-version:5.3
+// swift-tools-version:6.0
 import PackageDescription
+
 let package = Package(
     name: "FrenchRepublicanCalendarWeb",
-    platforms: [.macOS(.v11)],
+    platforms: [.macOS(.v13)],
     products: [
         .executable(name: "FrenchRepublicanCalendarWeb", targets: ["FrenchRepublicanCalendarWeb"])
     ],
     dependencies: [
-        .package(name: "Tokamak", url: "https://github.com/Snowy1803/Tokamak", .branch("picker-initial-selection")),
-        .package(name: "FrenchRepublicanCalendarCore", url: "https://github.com/Snowy1803/FrenchRepublicanCalendarCore", .branch("main"))
+        .package(url: "https://github.com/elementary-swift/elementary", from: "0.1.0"),
+        .package(url: "https://github.com/elementary-swift/elementary-ui", from: "0.1.0"),
+        .package(url: "https://github.com/Snowy1803/FrenchRepublicanCalendarCore", branch: "main"),
+        .package(url: "https://github.com/swiftwasm/JavaScriptKit", from: "0.19.0")
     ],
     targets: [
-        .target(
+        .executableTarget(
             name: "FrenchRepublicanCalendarWeb",
             dependencies: [
-                .product(name: "TokamakDOM", package: "Tokamak"),
-                "FrenchRepublicanCalendarCore"
+                .product(name: "Elementary", package: "elementary"),
+                .product(name: "ElementaryUI", package: "elementary-ui"),
+                "FrenchRepublicanCalendarCore",
+                .product(name: "JavaScriptKit", package: "JavaScriptKit")
             ]),
         .testTarget(
             name: "FrenchRepublicanCalendarWebTests",

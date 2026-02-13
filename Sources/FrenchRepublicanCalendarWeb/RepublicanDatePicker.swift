@@ -1,28 +1,19 @@
-//
-//  RepublicanDatePicker.swift
-//  FrenchRepublicanCalendarWeb
-//
-//  Created by Emil Pedersen on 20/10/2020.
-//  Copyright © 2020 Snowy_1803. All rights reserved.
-//
-//  This Source Code Form is subject to the terms of the Mozilla Public
-//  License, v. 2.0. If a copy of the MPL was not distributed with this
-//  file, You can obtain one at https://mozilla.org/MPL/2.0/.
-//
 
-import TokamakCore
+import Elementary
+import ElementaryUI
 import FrenchRepublicanCalendarCore
 
-struct RepublicanDatePicker: View {
+@View
+struct RepublicanDatePicker {
     @Binding var date: MyRepublicanDateComponents
     
     var body: some View {
-        HStack(spacing: 0) {
+        div(.style("display: flex")) {
             NavigatingPicker(
                 selection: $date.day,
                 range: 1..<(date.month < 13 ? 31 : FrenchRepublicanDateOptions.current.variant.isYearSextil(date.year) ? 7 : 6)
             )
-            Text(" ")
+            " "
             NavigatingPicker(
                 selection: $date.month,
                 range: 1..<14,
@@ -30,7 +21,7 @@ struct RepublicanDatePicker: View {
                     FrenchRepublicanDate.allMonthNames[$0 - 1]
                 }
             )
-            Text(" ")
+            " "
             NavigatingPicker(
                 selection: $date.year,
                 range: 1..<600,
@@ -42,18 +33,27 @@ struct RepublicanDatePicker: View {
     }
 }
 
-struct NavigatingPicker: View {
+@View
+struct NavigatingPicker {
     @Binding var selection: Int
     var range: Range<Int>
     var transformer: (Int) -> String = String.init
     
     var body: some View {
-        Picker(selection: Binding<Int>(get: { selection - range.startIndex }, set: { selection = $0 + range.startIndex }), label: EmptyView()) {
-            AnyView(
-                ForEach(range) { value in
-                    Text(transformer(value))
+        select {
+            for value in range {
+                if selection == value {
+                    option(.value("\(value)"), .selected) { transformer(value) }
+                } else {
+                    option(.value("\(value)")) { transformer(value) }
                 }
-            )
+            }
+        }
+        .onInput { event in
+            // InputEvent in ElementaryUI wraps the raw event, providing targetValue
+            if let value = event.targetValue, let intValue = Int(value) {
+                selection = intValue
+            }
         }
     }
 }
