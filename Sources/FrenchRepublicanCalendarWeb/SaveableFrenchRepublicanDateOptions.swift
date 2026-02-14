@@ -16,7 +16,35 @@ import FrenchRepublicanCalendarCore
 import Foundation
 import JavaScriptKit
 
+
+
+extension TimeZone {
+    static var currentInBrowser: TimeZone? {
+        // Bridge: Get browser timezone
+        if let intl = JSObject.global.Intl.object,
+           let formatConstructor = intl.DateTimeFormat.function,
+           let formatObject = formatConstructor.callAsFunction(this: intl).object,
+           let resolvedOptionsFunc = formatObject.resolvedOptions.function,
+           let options = resolvedOptionsFunc.callAsFunction(this: formatObject).object,
+           let tz = options.timeZone.string {
+            return TimeZone(identifier: tz)
+        }
+        return nil
+    }
+}
+
 extension FrenchRepublicanDateOptions: @retroactive SaveableFrenchRepublicanDateOptions {
+    public static var timeZoneIdentifier: String {
+        get {
+            let storage = JSObject.global.localStorage
+            return storage.getItem("frdo-timezone").string ?? "local"
+        }
+        set {
+            let storage = JSObject.global.localStorage
+            _ = storage.setItem("frdo-timezone", JSValue.string(newValue))
+        }
+    }
+
     public static var current: FrenchRepublicanDateOptions {
         get {
             let storage = JSObject.global.localStorage
@@ -24,17 +52,15 @@ extension FrenchRepublicanDateOptions: @retroactive SaveableFrenchRepublicanDate
             let variantString = storage.getItem("frdo-variant").string ?? "2" // Default to Delambre (2)
             let variantRaw = Int(variantString) ?? 2
             
-            // Bridge: Get browser timezone
+            let tzId = timeZoneIdentifier
             var timeZone: TimeZone? = nil
-            // Use a safer, more explicit way to access the deep JS property
-            // Intl.DateTimeFormat().resolvedOptions().timeZone
-            if let intl = JSObject.global.Intl.object,
-               let formatConstructor = intl.DateTimeFormat.function,
-               let formatObject = formatConstructor.callAsFunction(this: intl).object,
-               let resolvedOptionsFunc = formatObject.resolvedOptions.function,
-               let options = resolvedOptionsFunc.callAsFunction(this: formatObject).object,
-               let tz = options.timeZone.string {
-                timeZone = TimeZone(identifier: tz)
+            
+            if tzId == "local" {
+                timeZone = .currentInBrowser
+            } else if tzId == "paris_meridian" {
+                timeZone = .parisMeridian
+            } else if !tzId.isEmpty {
+                timeZone = TimeZone(identifier: tzId)
             }
             
             return FrenchRepublicanDateOptions(

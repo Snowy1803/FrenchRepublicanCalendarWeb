@@ -163,6 +163,18 @@ struct SettingsView {
     var date: Date
     var setDate: (Date) -> Void
     
+    @State var timeZoneID: String = FrenchRepublicanDateOptions.timeZoneIdentifier
+    
+    var timeZoneCaption: String {
+        switch timeZoneID {
+        case "local": return "Utiliser le fuseau horaire système"
+        case "paris_meridian": return "Fuseau utilisé en France entre 1891 et 1911"
+        case "GMT": return "Fuseau utilisé en France entre 1911 et 1940"
+        case "Europe/Paris": return "Fuseau utilisé en France actuellement"
+        default: return ""
+        }
+    }
+    
     var body: some View {
         div(.class("settings-grid")) {
              // Row 1: Roman Year
@@ -204,6 +216,28 @@ struct SettingsView {
                      FrenchRepublicanDateOptions.current = options
                      // Force refresh
                      setDate(date)
+                }
+            }
+            
+            // Row 3: TimeZone Picker
+            label(.class("settings-label"), .class("align-start")) { "Fuseau horaire :" }
+            div {
+                select {
+                    option(.value("local"), timeZoneID == "local" ? .selected : .class("opt")) { "Heure locale" }
+                    option(.value("paris_meridian"), timeZoneID == "paris_meridian" ? .selected : .class("opt")) { "Heure moyenne de Paris" }
+                    option(.value("GMT"), timeZoneID == "GMT" ? .selected : .class("opt")) { "Heure de Greenwich" }
+                    option(.value("Europe/Paris"), timeZoneID == "Europe/Paris" ? .selected : .class("opt")) { "Heure à Paris" }
+                }
+                .onInput { event in
+                    if let val = event.targetValue {
+                        timeZoneID = val
+                        FrenchRepublicanDateOptions.timeZoneIdentifier = val
+                        // Force refresh; main app loop reads FrenchRepublicanDateOptions.current which reads the static identifier
+                        setDate(date)
+                    }
+                }
+                div(.class("settings-caption")) {
+                    timeZoneCaption
                 }
             }
         }
