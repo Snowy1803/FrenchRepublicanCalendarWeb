@@ -12,22 +12,6 @@ struct ContentView {
     // and re-read FrenchRepublicanDateOptions.current
     @State var refreshID = UUID()
     
-    init() {
-        if let str = JSObject.global.window.location.hash.jsString {
-            let current = JSDate()
-            let components = str.description.dropFirst().components(separatedBy: "-")
-            if components.count == 3 {
-                current.fullYear = Int(components[0]) ?? 0
-                current.month = (Int(components[1]) ?? 0) - 1
-                current.date = Int(components[2]) ?? 0
-            }
-            let ms = current.valueOf()
-            if ms.isFinite {
-                 _date = State(wrappedValue: Date(timeIntervalSince1970: ms / 1000))
-            }
-        }
-    }
-    
     func updateHash(date: Date) {
         let jsDate = JSDate(millisecondsSinceEpoch: date.timeIntervalSince1970 * 1000)
         let y = jsDate.fullYear
@@ -41,6 +25,22 @@ struct ContentView {
         }
         let hash = "\(year)-\("0\(jsDate.month + 1)".suffix(2))-\("0\(jsDate.date)".suffix(2))"
         JSObject.global.window.location.hash = JSValue(stringLiteral: hash)
+    }
+    
+    func updateDateFromHash() {
+        if let str = JSObject.global.window.location.hash.jsString {
+            let current = JSDate()
+            let components = str.description.dropFirst().components(separatedBy: "-")
+            if components.count == 3 {
+                current.fullYear = Int(components[0]) ?? 0
+                current.month = (Int(components[1]) ?? 0) - 1
+                current.date = Int(components[2]) ?? 0
+            }
+            let ms = current.valueOf()
+            if ms.isFinite {
+                 date = Date(timeIntervalSince1970: ms / 1000)
+            }
+        }
     }
     
     var body: some View {
@@ -86,6 +86,17 @@ struct ContentView {
         }
         .onChange(of: date) { _, newDate in
              updateHash(date: newDate)
+        }
+        .onAppear {
+            // Initial load
+            updateDateFromHash()
+            
+            // Listen for hash changes (back/forward navigation)
+            let onHashChange = JSClosure { _ in
+                updateDateFromHash()
+                return .undefined
+            }
+            JSObject.global.window.onhashchange = .function(onHashChange)
         }
     }
 }
