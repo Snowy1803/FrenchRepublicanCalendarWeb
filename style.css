@@ -90,13 +90,13 @@ h1 {
 h2 {
     font-size: 1.25rem;
     font-weight: 600;
-    margin: 0 0 16px 0;
+    margin: 0;
     color: var(--text-primary);
     text-align: left;
 }
 
 .today-display {
-    text-align: center;
+    text-align: left;
     font-size: 1.5rem;
     font-weight: 600;
     margin: 0;
@@ -247,6 +247,22 @@ a:hover {
 .definition-link:hover {
     opacity: 1;
     text-decoration: underline;
+}
+
+/* Decimal Time Display */
+.decimal-time-display {
+    text-align: left;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-family);
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.decimal-fraction {
+    font-size: 0.6em;
+    opacity: 0.7;
 }
 
 /* Date Details Grid (New Flat Structure) */
