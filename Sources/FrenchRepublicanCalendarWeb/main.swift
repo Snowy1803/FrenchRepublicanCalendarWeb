@@ -59,7 +59,7 @@ struct ContentView {
             let frd = FrenchRepublicanDate(date: date)
             
             // Card 1: Today
-            div(.class("glass-card"), .class("card-center")) {
+            div(.class("glass-card")) {
                 h2 { "Aujourd'hui" }
                 div(.class("today-display")) {
                     a(.href("javascript:void(0)"), .class("today-link")) {
@@ -71,9 +71,15 @@ struct ContentView {
                 }
             }
             
-            // Card 2: Converter
+            // Card 2: Decimal Time
             div(.class("glass-card")) {
-                h2 { "Convertisseur" }
+                h2 { "Temps décimal" }
+                DecimalTimeView()
+            }
+            
+            // Card 3: Converter
+            div(.class("glass-card")) {
+                h2 { "Convertir" }
                 div(.class("converter-grid")) {
                     // Row 1: Gregorian
                     label(.class("converter-label")) { "Grégorien :" }
@@ -113,6 +119,42 @@ struct ContentView {
 
 // RightColumnInputs removed as it is now integrated into ContentView
 
+
+@View
+struct DecimalTimeView {
+    @State var time = DecimalTime()
+    @State var timer: JSValue? = nil
+    
+    var body: some View {
+        div(.class("decimal-time-display")) {
+            "\(time.description)"
+            span(.class("decimal-fraction")) {
+                String(format: "%.1f", time.remainder).dropFirst()
+            }
+        }
+        .onAppear {
+            startTimer()
+        }
+        .onDisappear {
+            stopTimer()
+        }
+    }
+    
+    func startTimer() {
+        stopTimer()
+        timer = JSObject.global.setInterval!(JSClosure { [self] _ in
+            time = DecimalTime()
+            return JSValue.null
+        }, 86)
+    }
+    
+    func stopTimer() {
+        if let t = timer {
+            _ = JSObject.global.clearInterval!(t)
+            timer = nil
+        }
+    }
+}
 
 @View
 struct SettingsView {

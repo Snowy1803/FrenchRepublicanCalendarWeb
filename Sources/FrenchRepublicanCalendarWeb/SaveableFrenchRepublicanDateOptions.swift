@@ -24,9 +24,23 @@ extension FrenchRepublicanDateOptions: @retroactive SaveableFrenchRepublicanDate
             let variantString = storage.getItem("frdo-variant").string ?? "2" // Default to Delambre (2)
             let variantRaw = Int(variantString) ?? 2
             
+            // Bridge: Get browser timezone
+            var timeZone: TimeZone? = nil
+            // Use a safer, more explicit way to access the deep JS property
+            // Intl.DateTimeFormat().resolvedOptions().timeZone
+            if let intl = JSObject.global.Intl.object,
+               let formatConstructor = intl.DateTimeFormat.function,
+               let formatObject = formatConstructor.callAsFunction(this: intl).object,
+               let resolvedOptionsFunc = formatObject.resolvedOptions.function,
+               let options = resolvedOptionsFunc.callAsFunction(this: formatObject).object,
+               let tz = options.timeZone.string {
+                timeZone = TimeZone(identifier: tz)
+            }
+            
             return FrenchRepublicanDateOptions(
                 romanYear: romanYear,
-                variant: Variant(rawValue: variantRaw) ?? .delambre
+                variant: Variant(rawValue: variantRaw) ?? .delambre,
+                timeZone: timeZone
             )
         }
         set {
