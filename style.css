@@ -177,16 +177,35 @@ select:focus {
     align-items: center;
 }
 
+.settings-grid select {
+    width: 100%;
+}
+
 .settings-label {
     text-align: right;
     font-weight: 500;
     color: var(--text-secondary);
 }
 
+.settings-label.align-start {
+    align-self: start;
+    margin-top: 8px;
+    /* Align with input baseline */
+}
+
 .settings-value-row {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.settings-caption {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    grid-column: 2;
+    /* Align with the input field in the grid */
+    line-height: 1.4;
 }
 
 /* Custom Checkbox */
