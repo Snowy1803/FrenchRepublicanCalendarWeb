@@ -9,13 +9,13 @@ struct ConverterView {
     @Binding var selection: FrenchRepublicanDate
     
     var body: some View {
-        div(.class("converter-grid")) {
+        div(.class("form-grid")) {
             // Row 1: Gregorian
-            label(.class("converter-label")) { "Grégorien :" }
+            label(.class("form-label")) { "Grégorien :" }
             DateInput(selection: $selection, date: selection.date)
             
             // Row 2: Republican
-            label(.class("converter-label")) { "Républicain :" }
+            label(.class("form-label")) { "Républicain :" }
             RepublicanDatePicker(date: Binding(get: {
                 MyRepublicanDateComponents(day: selection.components.day!, month: selection.components.month!, year: selection.components.year!)
             }, set: { newComps in

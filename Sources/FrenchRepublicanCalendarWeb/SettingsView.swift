@@ -21,9 +21,9 @@ struct SettingsView {
     }
     
     var body: some View {
-        div(.class("settings-grid")) {
+        div(.class("form-grid"), .class("settings-grid")) {
              // Row 1: Roman Year
-            Elementary.label(.class("settings-label")) { "Années :" }
+            Elementary.label(.class("form-label")) { "Années :" }
             Elementary.label(.class("settings-value-row")) {
                 input(.type(.checkbox))
                     .bindChecked(Binding {
@@ -36,7 +36,7 @@ struct SettingsView {
             }
             
             // Row 2: Variant Picker
-            Elementary.label(.class("settings-label")) { "Calendrier :" }
+            Elementary.label(.class("form-label")) { "Calendrier :" }
             div {
                 select {
                     for variantOption in FrenchRepublicanDateOptions.Variant.allCases {
@@ -53,7 +53,7 @@ struct SettingsView {
             }
             
             // Row 3: TimeZone Picker
-            Elementary.label(.class("settings-label"), .class("align-start")) { "Fuseau horaire :" }
+            Elementary.label(.class("form-label"), .class("align-start")) { "Fuseau horaire :" }
             div {
                 select {
                     let tzi = FrenchRepublicanDateOptions.timeZoneIdentifier
