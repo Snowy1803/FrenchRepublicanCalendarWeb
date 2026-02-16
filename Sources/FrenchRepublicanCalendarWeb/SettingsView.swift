@@ -40,11 +40,8 @@ struct SettingsView {
             div {
                 select {
                     for variantOption in FrenchRepublicanDateOptions.Variant.allCases {
-                        if FrenchRepublicanDateOptions.current.variant == variantOption {
-                             option(.value("\(variantOption.rawValue)"), .selected) { variantOption.description }
-                        } else {
-                             option(.value("\(variantOption.rawValue)")) { variantOption.description }
-                        }
+                         option(.value("\(variantOption.rawValue)"), .selected) { variantOption.description }
+                            .attributes(.selected, when: FrenchRepublicanDateOptions.current.variant == variantOption)
                     }
                 }
                 .onInput { event in
@@ -59,10 +56,18 @@ struct SettingsView {
             Elementary.label(.class("settings-label"), .class("align-start")) { "Fuseau horaire :" }
             div {
                 select {
-                    option(.value("local"), FrenchRepublicanDateOptions.timeZoneIdentifier == "local" ? .selected : .class("opt")) { "Heure locale" }
-                    option(.value("paris_meridian"), FrenchRepublicanDateOptions.timeZoneIdentifier == "paris_meridian" ? .selected : .class("opt")) { "Heure moyenne de Paris" }
-                    option(.value("GMT"), FrenchRepublicanDateOptions.timeZoneIdentifier == "GMT" ? .selected : .class("opt")) { "Heure de Greenwich" }
-                    option(.value("Europe/Paris"), FrenchRepublicanDateOptions.timeZoneIdentifier == "Europe/Paris" ? .selected : .class("opt")) { "Heure à Paris" }
+                    let tzi = FrenchRepublicanDateOptions.timeZoneIdentifier
+                    option(.value("local")) { "Heure locale" }
+                        .attributes(.selected, when: tzi == "local")
+                    option(.value("paris_meridian")) { "Heure moyenne de Paris" }
+                        .attributes(.selected, when: tzi == "paris_meridian")
+                    option(.value("GMT")) { "Heure de Greenwich" }
+                        .attributes(.selected, when: tzi == "GMT")
+                    option(.value("Europe/Paris")) { "Heure à Paris" }
+                        .attributes(.selected, when: tzi == "Europe/Paris")
+                    if timeZoneCaption == "" {
+                        option(.value(tzi), .selected) { "Autre : " + tzi }
+                    }
                 }
                 .onInput { event in
                     if let val = event.targetValue {
