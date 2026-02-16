@@ -63,18 +63,29 @@ body {
     margin-bottom: 0;
 }
 
-/* Converter Grid */
-.converter-grid {
+/* Form Grid & Labels */
+.form-grid {
     display: grid;
-    grid-template-columns: 120px 1fr;
+    grid-template-columns: 140px 1fr;
     gap: 16px 24px;
     align-items: center;
 }
 
-.converter-label {
+.form-label {
     text-align: right;
     font-weight: 500;
     color: var(--text-secondary);
+}
+
+.form-label.align-start {
+    align-self: start;
+    margin-top: 8px;
+    /* Align with input baseline */
+}
+
+/* Settings Grid Overrides */
+.settings-grid select {
+    width: 100%;
 }
 
 /* Typography */
@@ -170,27 +181,8 @@ select:focus {
 }
 
 /* Settings Grid */
-.settings-grid {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 16px 24px;
-    align-items: center;
-}
-
 .settings-grid select {
     width: 100%;
-}
-
-.settings-label {
-    text-align: right;
-    font-weight: 500;
-    color: var(--text-secondary);
-}
-
-.settings-label.align-start {
-    align-self: start;
-    margin-top: 8px;
-    /* Align with input baseline */
 }
 
 .settings-value-row {
@@ -284,19 +276,10 @@ a:hover {
     opacity: 0.7;
 }
 
-/* Date Details Grid (New Flat Structure) */
+/* Date Details Grid (Overrides form-grid) */
 .date-details-grid {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: 12px 24px;
     align-items: baseline;
     width: 100%;
-}
-
-.detail-label {
-    text-align: right;
-    font-weight: 500;
-    color: var(--text-secondary);
 }
 
 .detail-value {
@@ -310,12 +293,12 @@ a:hover {
         padding: 24px;
     }
 
-    .converter-grid {
+    .form-grid {
         grid-template-columns: 1fr;
         gap: 8px;
     }
 
-    .converter-label {
+    .form-label {
         text-align: left;
         margin-top: 12px;
     }
@@ -325,14 +308,79 @@ a:hover {
         gap: 8px;
     }
 
-    .detail-label {
-        text-align: left;
-        color: var(--text-secondary);
-        font-size: 0.9em;
-        margin-top: 8px;
-    }
-
     .app-container {
         padding: 10px;
+    }
+}
+
+/* Dark Mode Overrides */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Dark Palette */
+        --bg-gradient-start: #1A2F23;
+        --bg-gradient-end: #0F1F15;
+        --text-primary: #E0E0E0;
+        --text-secondary: #A0B0A5;
+        --accent-primary: #4E9F65;
+        --accent-hover: #60B67A;
+        --accent-pill-bg: rgba(78, 159, 101, 0.2);
+        --accent-pill-text: #4E9F65;
+
+        /* Glassmorphism Dark */
+        --glass-bg: rgba(0, 0, 0, 0.45);
+        --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+        --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    /* Checkbox & Inputs */
+    input[type="checkbox"] {
+        background: rgba(0, 0, 0, 0.4);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    input[type="checkbox"]:checked {
+        border-color: var(--accent-primary);
+        background: var(--accent-primary);
+    }
+
+    /* Hover States - Prevent "Flashlight" effect */
+    input[type="date"]:hover,
+    select:hover,
+    input[type="text"]:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Input/Select Backgrounds (optional tweak for better integration) */
+    input[type="date"],
+    select,
+    input[type="text"] {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.15);
+        color: var(--text-primary);
+    }
+
+    input[type="date"]:focus,
+    select:focus {
+        background-color: rgba(0, 0, 0, 0.5);
+        border-color: var(--accent-primary);
+    }
+
+    /* Today Button */
+    .today-link {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .today-link:hover {
+        background: var(--accent-pill-bg);
+        color: var(--accent-primary);
+        border-color: var(--accent-primary);
+    }
+
+    select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%23A0B0A5' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
     }
 }
