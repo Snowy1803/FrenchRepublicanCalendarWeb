@@ -7,38 +7,25 @@ import JavaScriptKit
 
 @View
 struct ContentView {
-    @State var date: Date = Date()
-    // Generic refresh signal. Toggling this UUID forces SwiftWasm to re-evaluate the view
-    // and re-read FrenchRepublicanDateOptions.current
-    @State var refreshID = UUID()
+    @State var selection: FrenchRepublicanDate = FrenchRepublicanDate(date: Date())
     
-    func updateHash(date: Date) {
-        let jsDate = JSDate(millisecondsSinceEpoch: date.timeIntervalSince1970 * 1000)
-        let y = jsDate.fullYear
-        let year: String
-        if y < 0 {
-             year = "-" + "00000\(-y)".suffix(6)
-        } else if y > 9999 {
-             year = "+" + "00000\(y)".suffix(6)
-        } else {
-             year = String("000\(y)".suffix(4))
-        }
-        let hash = "\(year)-\("0\(jsDate.month + 1)".suffix(2))-\("0\(jsDate.date)".suffix(2))"
+    var hashStyle: Date.ISO8601FormatStyle {
+        Date.ISO8601FormatStyle(timeZone: FrenchRepublicanDateOptions.current.currentTimeZone)
+            .year().month().day()
+    }
+
+    func updateHash(date: FrenchRepublicanDate) {
+        let hash = date.date.formatted(hashStyle)
         JSObject.global.window.location.hash = JSValue(stringLiteral: hash)
     }
     
     func updateDateFromHash() {
         if let str = JSObject.global.window.location.hash.jsString {
-            let current = JSDate()
-            let components = str.description.dropFirst().components(separatedBy: "-")
-            if components.count == 3 {
-                current.fullYear = Int(components[0]) ?? 0
-                current.month = (Int(components[1]) ?? 0) - 1
-                current.date = Int(components[2]) ?? 0
-            }
-            let ms = current.valueOf()
-            if ms.isFinite {
-                 date = Date(timeIntervalSince1970: ms / 1000)
+            // Drop the '#' character
+            let dateString = String(str.description.dropFirst())
+            
+            if let date = try? Date(dateString, strategy: hashStyle) {
+                selection = FrenchRepublicanDate(date: date)
             }
         }
     }
@@ -48,14 +35,10 @@ struct ContentView {
             // Header
             h1 { "Calendrier républicain" }
             
-            // Re-calculate FRD whenever date OR refreshID changes
-            let _ = refreshID // Dependency
-            let frd = FrenchRepublicanDate(date: date)
-            
             // Card 1: Today
             div(.class("glass-card")) {
                 h2 { "Aujourd'hui" }
-                TodayView(date: $date)
+                TodayView(selection: $selection)
             }
             
             // Card 2: Decimal Time
@@ -67,25 +50,25 @@ struct ContentView {
             // Card 3: Converter
             div(.class("glass-card")) {
                 h2 { "Convertir" }
-                ConverterView(date: $date, frd: frd)
+                ConverterView(selection: $selection)
             }
             
             // Card 4: Details
             div(.class("glass-card")) {
                 h2 { "Détails" }
-                DateDetails(date: frd)
+                DateDetails(selection: selection)
             }
             
             // Card 5: Settings
             div(.class("glass-card")) {
                 h2 { "Réglages" }
                 SettingsView(onChange: {
-                    refreshID = UUID()
+                    selection = FrenchRepublicanDate(date: selection.date)
                 })
             }
         }
-        .onChange(of: date) { _, newDate in
-             updateHash(date: newDate)
+        .onChange(of: selection) { _, newSelection in
+             updateHash(date: newSelection)
         }
         .onAppear {
             // Initial load
@@ -96,7 +79,7 @@ struct ContentView {
                 updateDateFromHash()
                 return .undefined
             }
-            JSObject.global.window.onhashchange = .function(onHashChange)
+            JSObject.global.window.onhashchange = .object(onHashChange)
         }
     }
 }

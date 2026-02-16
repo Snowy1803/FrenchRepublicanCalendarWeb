@@ -25,11 +25,13 @@ struct SettingsView {
              // Row 1: Roman Year
             Elementary.label(.class("settings-label")) { "Années :" }
             Elementary.label(.class("settings-value-row")) {
-                input(attributes: [.type(.checkbox)] + (FrenchRepublicanDateOptions.current.romanYear ? [.checked] : []))
-                    .onInput { _ in
-                            FrenchRepublicanDateOptions.current.romanYear.toggle()
-                            onChange()
-                    }
+                input(.type(.checkbox))
+                    .bindChecked(Binding {
+                        FrenchRepublicanDateOptions.current.romanYear
+                    } set: {
+                        FrenchRepublicanDateOptions.current.romanYear = $0
+                        onChange()
+                    })
                 span { "Chiffres romains" }
             }
             

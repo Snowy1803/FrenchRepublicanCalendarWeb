@@ -6,15 +6,17 @@ import FrenchRepublicanCalendarCore
 
 @View
 struct TodayView {
-    @Binding var date: Date
+    @Binding var selection: FrenchRepublicanDate
     
     var body: some View {
+        let today = FrenchRepublicanDate(date: Date())
         div(.class("today-display")) {
+            let _ = selection // mark as used, to force update when settings change
             a(.href("javascript:void(0)"), .class("today-link")) {
-                FRCFormat.republicanDate.weekday(.long).day(.preferred).year(.long).format(FrenchRepublicanDate(date: Date()))
+                FRCFormat.republicanDate.weekday(.long).day(.preferred).year(.long).format(today)
             }
             .onClick {
-                date = Date()
+                selection = today
             }
         }
     }

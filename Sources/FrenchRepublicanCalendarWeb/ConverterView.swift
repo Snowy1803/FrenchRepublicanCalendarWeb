@@ -6,36 +6,44 @@ import FrenchRepublicanCalendarCore
 
 @View
 struct ConverterView {
-    @Binding var date: Date
-    var frd: FrenchRepublicanDate
-    
-    // Helper formatter for the date input
-    var inputDateFormatter: DateFormatter {
-        let f = DateFormatter()
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }
+    @Binding var selection: FrenchRepublicanDate
     
     var body: some View {
         div(.class("converter-grid")) {
             // Row 1: Gregorian
             label(.class("converter-label")) { "Grégorien :" }
-            input(.type(.date), .value(inputDateFormatter.string(from: date)))
-                .onInput { event in
-                    if let value = event.targetValue {
-                        if let newDate = inputDateFormatter.date(from: value) {
-                            date = newDate
-                        }
-                    }
-                }
+            DateInput(selection: $selection, date: selection.date)
             
             // Row 2: Republican
             label(.class("converter-label")) { "Républicain :" }
             RepublicanDatePicker(date: Binding(get: {
-                MyRepublicanDateComponents(day: frd.components.day!, month: frd.components.month!, year: frd.components.year!)
+                MyRepublicanDateComponents(day: selection.components.day!, month: selection.components.month!, year: selection.components.year!)
             }, set: { newComps in
-                date = newComps.toRep.date
+                selection = newComps.toRep
             }))
         }
+    }
+}
+
+@View
+struct DateInput {
+    @Binding var selection: FrenchRepublicanDate
+    var date: Date // The date value does not get updated without this
+    
+    // ISO8601 FormatStyle for date input (yyyy-MM-dd)
+    var inputFormat: Date.ISO8601FormatStyle {
+        Date.ISO8601FormatStyle(timeZone: FrenchRepublicanDateOptions.current.currentTimeZone)
+        .year().month().day()
+    }
+
+    var body: some View {
+        input(.type(.date))
+            .bindValue(Binding(get: {
+                date.formatted(inputFormat)
+            }, set: { newValue in
+                if let newDate = try? Date(newValue, strategy: inputFormat) {
+                    selection = FrenchRepublicanDate(date: newDate)
+                }
+            }))
     }
 }
