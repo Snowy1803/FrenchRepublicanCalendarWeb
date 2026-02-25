@@ -25,15 +25,6 @@ struct DateDetails {
                     .locale(Locale(identifier: "fr_FR"))
                  )
              }
-
-             // Row 1
-             div(.class("form-label")) { "Jour :" }
-             div(.class("detail-value")) {
-                 selection.dayName
-                 if let url = selection.descriptionURL?.absoluteString {
-                     a(.href(url), .target(.blank), .class("definition-link")) { "(Définition)" }
-                 }
-             }
              
              // Row 2
              div(.class("form-label")) { "Saison :" }

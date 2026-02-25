@@ -260,6 +260,64 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Word of the Day Card */
+.day-word-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.day-name-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.day-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.day-nature {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.day-explanation {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 4px 0 12px 0;
+    color: var(--text-primary);
+}
+
+.definition-link-button {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.4);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.definition-link-button:hover {
+    background: var(--accent-pill-bg);
+    color: var(--accent-pill-text);
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.definition-link-button::before {
+    content: "↗";
+    font-size: 1.1em;
+}
+
 /* Decimal Time Display */
 .decimal-time-display {
     text-align: left;

@@ -1,13 +1,13 @@
 {
-  "originHash" : "30ead0aaaa51d8e4781430593fe631068801e4f0187cafd3e5d22d8b210cc29e",
+  "originHash" : "5d81a8d6d4a9984968acab6dd42467e4f86483fc73861810d9201cc7d12e5520",
   "pins" : [
     {
       "identity" : "elementary",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/elementary-swift/elementary",
       "state" : {
-        "revision" : "65803c4770b6c8b6452c6ce83ab570c1b7042528",
-        "version" : "0.6.1"
+        "revision" : "ca09461308fbd568a95523544d97119ba7aea2a1",
+        "version" : "0.6.4"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/elementary-swift/elementary-ui",
       "state" : {
-        "revision" : "b06c13e88543a3c2430503aa9d6554eadfc143f6",
-        "version" : "0.1.3"
+        "revision" : "923d15c952117098fdd241e656a67290eb96f808",
+        "version" : "0.1.6"
       }
     },
     {
@@ -25,16 +25,16 @@
       "location" : "https://github.com/Snowy1803/FrenchRepublicanCalendarCore",
       "state" : {
         "branch" : "main",
-        "revision" : "532908b6c6042e146eb6633a2da95e2a3b093bd6"
+        "revision" : "d479cca59adef1e48d797e777d2707606d0a57f4"
       }
     },
     {
       "identity" : "javascriptkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftwasm/JavaScriptKit.git",
+      "location" : "https://github.com/swiftwasm/JavaScriptKit",
       "state" : {
-        "revision" : "4b327dc40d3931c2236ed43c6b47325c17c88afe",
-        "version" : "0.37.0"
+        "revision" : "aa9aa778c59bddc8da8e72db4e282e8bbb9e9bbe",
+        "version" : "0.46.3"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax",
       "state" : {
-        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
-        "version" : "601.0.1"
+        "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
+        "version" : "602.0.0"
       }
     }
   ],

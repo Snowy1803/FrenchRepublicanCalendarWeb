@@ -53,6 +53,12 @@ struct ContentView {
                 ConverterView(selection: $selection)
             }
             
+            // Card 3.5: Word of the Day
+            div(.class("glass-card")) {
+                h2 { "Mot du jour" }
+                DayWordView(selection: selection)
+            }
+            
             // Card 4: Details
             div(.class("glass-card")) {
                 h2 { "Détails" }
