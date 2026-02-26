@@ -6,7 +6,7 @@ import { WASI, File, OpenFile, ConsoleStdout, PreopenDirectory, Directory, Inode
 
 
 /** @type {import('./node.d.ts').defaultNodeSetup} */
-export async function defaultNodeSetup(options) {
+export async function defaultNodeSetup(options = {}) {
     const path = await import("node:path");
     const { fileURLToPath } = await import("node:url");
     const { readFile } = await import("node:fs/promises")

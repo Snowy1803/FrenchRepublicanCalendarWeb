@@ -1,5 +1,5 @@
 // @ts-check
-import { SwiftRuntime } from "./runtime.js"
+import { SwiftRuntime } from "./runtime.js";
 
 export const MODULE_PATH = "FrenchRepublicanCalendarWeb.wasm";
 
@@ -16,7 +16,9 @@ async function createInstantiator(options, swift) {
         addImports: (importObject, importsContext) => {
             // Provide a default implementation for BridgeJS functions that are not
             // used at runtime without BridgeJS but required to instantiate the module.
-            const unexpectedBjsCall = () => { throw new Error("Unexpected call to BridgeJS function") }
+            const unexpectedBjsCall = () => {
+                throw new Error("Unexpected call to BridgeJS function");
+            };
             importObject["bjs"] = {
                 swift_js_return_string: unexpectedBjsCall,
                 swift_js_init_memory: unexpectedBjsCall,
@@ -25,14 +27,13 @@ async function createInstantiator(options, swift) {
                 swift_js_throw: unexpectedBjsCall,
                 swift_js_retain: unexpectedBjsCall,
                 swift_js_release: unexpectedBjsCall,
-                swift_js_push_tag: unexpectedBjsCall,
-                swift_js_push_int: unexpectedBjsCall,
+                swift_js_push_i32: unexpectedBjsCall,
                 swift_js_push_f32: unexpectedBjsCall,
                 swift_js_push_f64: unexpectedBjsCall,
                 swift_js_push_string: unexpectedBjsCall,
-                swift_js_pop_param_int32: unexpectedBjsCall,
-                swift_js_pop_param_f32: unexpectedBjsCall,
-                swift_js_pop_param_f64: unexpectedBjsCall,
+                swift_js_pop_i32: unexpectedBjsCall,
+                swift_js_pop_f32: unexpectedBjsCall,
+                swift_js_pop_f64: unexpectedBjsCall,
                 swift_js_return_optional_bool: unexpectedBjsCall,
                 swift_js_return_optional_int: unexpectedBjsCall,
                 swift_js_return_optional_string: unexpectedBjsCall,
@@ -48,7 +49,10 @@ async function createInstantiator(options, swift) {
                 swift_js_get_optional_double_presence: unexpectedBjsCall,
                 swift_js_get_optional_double_value: unexpectedBjsCall,
                 swift_js_get_optional_heap_object_pointer: unexpectedBjsCall,
-            }
+                swift_js_push_pointer: unexpectedBjsCall,
+                swift_js_pop_pointer: unexpectedBjsCall,
+                swift_js_closure_unregister: unexpectedBjsCall,
+            };
         },
         /** @param {WebAssembly.Instance} instance */
         setInstance: (instance) => {},
@@ -56,45 +60,39 @@ async function createInstantiator(options, swift) {
         createExports: (instance) => {
             return {};
         },
-    }
+    };
 }
 
 /** @type {import('./instantiate.d').instantiate} */
-export async function instantiate(
-    options
-) {
+export async function instantiate(options) {
     const result = await _instantiate(options);
-    options.wasi.initialize(result.instance);
-    result.swift.main();
+        options.wasi.initialize(result.instance);
+        result.swift.main();
     return result;
 }
 
 /** @type {import('./instantiate.d').instantiateForThread} */
-export async function instantiateForThread(
-    tid, startArg, options
-) {
+export async function instantiateForThread(tid, startArg, options) {
     const result = await _instantiate(options);
-    options.wasi.setInstance(result.instance);
-    result.swift.startThread(tid, startArg)
+        options.wasi.setInstance(result.instance);
+        result.swift.startThread(tid, startArg);
     return result;
 }
 
 /** @type {import('./instantiate.d').instantiate} */
-async function _instantiate(
-    options
-) {
+async function _instantiate(options) {
     const _WebAssembly = options.WebAssembly || WebAssembly;
     const moduleSource = options.module;
-    const { wasi } = options;
-    const swift = new SwiftRuntime({
-    });
+        const { wasi } = options;
+        const swift = new SwiftRuntime({
+            });
     const instantiator = await createInstantiator(options, swift);
 
     /** @type {WebAssembly.Imports} */
     const importObject = {
         javascript_kit: swift.wasmImports,
-        wasi_snapshot_preview1: wasi.wasiImport,
-    };
+                wasi_snapshot_preview1: wasi.wasiImport,
+                    };
     const importsContext = {
         getInstance: () => instance,
         getExports: () => exports,
@@ -109,9 +107,15 @@ async function _instantiate(
     if (moduleSource instanceof _WebAssembly.Module) {
         module = moduleSource;
         instance = await _WebAssembly.instantiate(module, importObject);
-    } else if (typeof Response === "function" && (moduleSource instanceof Response || moduleSource instanceof Promise)) {
+    } else if (
+        typeof Response === "function" &&
+        (moduleSource instanceof Response || moduleSource instanceof Promise)
+    ) {
         if (typeof _WebAssembly.instantiateStreaming === "function") {
-            const result = await _WebAssembly.instantiateStreaming(moduleSource, importObject);
+            const result = await _WebAssembly.instantiateStreaming(
+                moduleSource,
+                importObject,
+            );
             module = result.module;
             instance = result.instance;
         } else {
@@ -124,7 +128,8 @@ async function _instantiate(
         module = await _WebAssembly.compile(moduleSource);
         instance = await _WebAssembly.instantiate(module, importObject);
     }
-    instance = options.instrumentInstance?.(instance, { _swift: swift }) ?? instance;
+    instance =
+        options.instrumentInstance?.(instance, { _swift: swift }) ?? instance;
 
     swift.setInstance(instance);
     instantiator.setInstance(instance);
@@ -134,5 +139,5 @@ async function _instantiate(
         instance,
         swift,
         exports,
-    }
+    };
 }
