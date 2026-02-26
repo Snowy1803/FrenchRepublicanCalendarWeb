@@ -49,12 +49,24 @@ struct ContentView {
             
             // Card 3: Converter
             div(.class("glass-card")) {
-                h2 { "Convertir" }
+                div(.class("card-header")) {
+                    h2 { "Convertir" }
+                    
+                    let todayDate = FrenchRepublicanDate(date: Date())
+                    let isToday = selection.components.year == todayDate.components.year && selection.dayInYear == todayDate.dayInYear
+                    
+                    button(.class("today-button"), isToday ? .class("hidden") : .class("visible"), .title("Revenir à aujourd'hui")) {
+                        "×"
+                    }
+                    .onClick {
+                        selection = todayDate
+                    }
+                }
                 ConverterView(selection: $selection)
             }
             
             // Card 3.5: Word of the Day
-            div(.class("glass-card")) {
+            div(.id("word-of-the-day"), .class("glass-card")) {
                 h2 { "Mot du jour" }
                 DayWordView(selection: selection)
             }

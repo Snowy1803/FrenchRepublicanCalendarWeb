@@ -106,28 +106,30 @@ h2 {
     text-align: left;
 }
 
-.today-display {
-    text-align: left;
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0;
+.today-date-layout {
+    display: flex;
+    gap: 16px;
+    align-items: center;
 }
 
-.today-link {
-    color: var(--accent-primary);
-    text-decoration: none;
-    transition: all 0.2s ease;
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: var(--radius-pill);
-    background: rgba(255, 255, 255, 0.4);
+.today-day-number {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-primary);
 }
 
-.today-link:hover {
-    background: var(--accent-pill-bg);
-    color: var(--accent-pill-text);
-    text-decoration: none;
-    transform: translateY(-1px);
+.today-date-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.today-month-year,
+.today-day-name {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text-primary);
 }
 
 /* Utility to center content in a card */
@@ -136,9 +138,46 @@ h2 {
     text-align: center;
 }
 
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
 .text-secondary {
     color: var(--text-secondary);
     font-size: 0.95rem;
+}
+
+.today-button {
+    font-family: var(--font-family);
+    font-size: 1.5rem;
+    /* Larger for the crossing */
+    font-weight: 500;
+    line-height: 1;
+    /* Adjust to perfectly center the cross */
+    color: var(--accent-primary);
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.today-button.hidden {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.today-button:hover {
+    background: var(--accent-pill-bg);
+    color: var(--accent-pill-text);
+    transform: translateY(-1px);
 }
 
 /* Form Elements */
@@ -423,14 +462,13 @@ a:hover {
         border-color: var(--accent-primary);
     }
 
-    /* Today Button */
-    .today-link {
+    .today-button {
         background: rgba(255, 255, 255, 0.1);
         color: var(--text-primary);
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .today-link:hover {
+    .today-button:hover {
         background: var(--accent-pill-bg);
         color: var(--accent-primary);
         border-color: var(--accent-primary);
