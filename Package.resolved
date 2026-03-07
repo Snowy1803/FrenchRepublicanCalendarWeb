@@ -25,7 +25,7 @@
       "location" : "https://github.com/Snowy1803/FrenchRepublicanCalendarCore",
       "state" : {
         "branch" : "main",
-        "revision" : "d479cca59adef1e48d797e777d2707606d0a57f4"
+        "revision" : "6cd2e8bb6191a885660cb0fbc28175e0660f74a5"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftwasm/JavaScriptKit",
       "state" : {
-        "revision" : "aa9aa778c59bddc8da8e72db4e282e8bbb9e9bbe",
-        "version" : "0.46.3"
+        "revision" : "5529520b25638aa86765ab33b175289f1ab263a3",
+        "version" : "0.46.5"
       }
     },
     {
